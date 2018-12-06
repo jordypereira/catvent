@@ -43,6 +43,9 @@ module.exports = {
   modules: [
     '@nuxtjs/dotenv',
     'cookie-universal-nuxt',
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-75839523-2'
+    }]
   ],
 
   /*
