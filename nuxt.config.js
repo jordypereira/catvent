@@ -42,6 +42,7 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/dotenv',
+    'cookie-universal-nuxt',
   ],
 
   /*

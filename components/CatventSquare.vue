@@ -1,7 +1,7 @@
 <template>
   <div class="square" :class="{ 'square--active': squareActive }" @click="turnCard()">
     <div class="square__day">{{ id }}</div>
-    <CatFace v-if="squareActive && !squareRevealed"/>
+    <CatFace v-if="squareActive && !catUrl"/>
     <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
   </div>
 </template>
@@ -17,9 +17,10 @@ export default {
   },
   data() {
     return {
-      squareRevealed: false,
       apiKey: process.env.API_KEY,
-      catUrl: "",
+      catUrl: this.$cookies.get("catUrl-" + this.id)
+        ? this.$cookies.get("catUrl-" + this.id)
+        : "",
       today: 1
     };
   },
@@ -28,15 +29,18 @@ export default {
   },
   computed: {
     squareActive() {
-      if (this.id <= this.today && !this.squareRevealed) return true;
+      if (this.id <= this.today && !this.catUrl) return true;
       else return false;
     }
   },
   methods: {
     async turnCard() {
       if (this.squareActive) {
-        this.squareRevealed = true;
         this.catUrl = await this.fetchCatImage();
+        this.$cookies.set("catUrl-" + this.id, this.catUrl, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * (25 - this.today)
+        });
       }
     },
     async fetchCatImage() {
