@@ -31,6 +31,12 @@ export default {
     squareActive() {
       if (this.id <= this.today && !this.catUrl) return true;
       else return false;
+    },
+    randomCatUrl() {
+      const modifier = 30;
+      const min = (this.id - 1) * modifier;
+      const max = this.id * modifier;
+      return Math.floor(Math.random() * (max - min) + min);
     }
   },
   methods: {
@@ -45,7 +51,7 @@ export default {
     },
     async fetchCatImage() {
       axios.defaults.headers.common["x-api-key"] = this.apiKey;
-      let image = await axios.get("/v1/images/" + this.id);
+      let image = await axios.get("/v1/images/" + this.randomCatUrl);
 
       return image.data.url;
     }
