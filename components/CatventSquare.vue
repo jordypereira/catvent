@@ -1,5 +1,9 @@
 <template>
-  <div class="square" :class="{ 'square--active': squareActive }" @click="turnCard()">
+  <div
+    class="square"
+    :class="{ 'square--active': squareActive, 'square--loaded': catUrl }"
+    @click="turnCard()"
+  >
     <div class="square__day">{{ id }}</div>
     <CatFace v-if="!catUrl" :isActive="squareActive"/>
     <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
@@ -75,6 +79,10 @@ export default {
   width: var(--square-size);
   position: relative;
   @apply bg-indigo;
+}
+
+.square--loaded {
+  background: none;
 }
 
 .square--active:hover {
