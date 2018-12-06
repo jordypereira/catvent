@@ -19,7 +19,8 @@ export default {
     return {
       squareRevealed: false,
       apiKey: process.env.API_KEY,
-      catUrl: ""
+      catUrl: "",
+      today: 1
     };
   },
   components: {
@@ -27,7 +28,7 @@ export default {
   },
   computed: {
     squareActive() {
-      if (this.id < 7 && !this.squareRevealed) return true;
+      if (this.id <= this.today && !this.squareRevealed) return true;
       else return false;
     }
   },
@@ -47,6 +48,8 @@ export default {
   },
   mounted() {
     axios.defaults.baseURL = "https://api.thecatapi.com/";
+    const date = new Date();
+    this.today = date.getDate();
   }
 };
 </script>
