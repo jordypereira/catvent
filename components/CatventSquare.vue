@@ -1,17 +1,24 @@
 <template>
-  <div class="square" :class="{ 'square--active': squareActive }">
+  <div class="square" :class="{ 'square--active': squareActive }" @click="turnCard()">
     <div class="square__day">{{ id }}</div>
-    <CatFace v-if="squareActive"/>
+    <CatFace v-if="squareActive && !squareRevealed"/>
   </div>
 </template>
 
 <script>
 import CatFace from "../components/CatFace";
+import axios from "axios";
 
 export default {
   name: "CatventSquare",
   props: {
     id: Number
+  },
+  data() {
+    return {
+      squareRevealed: false,
+      apiKey: process.env.API_KEY
+    };
   },
   components: {
     CatFace
@@ -20,6 +27,16 @@ export default {
     squareActive() {
       if (this.id < 7) return true;
       else return false;
+    }
+  },
+  methods: {
+    turnCard() {
+      if (this.squareActive) {
+        this.squareRevealed = true;
+      }
+    },
+    fetchCatImage() {
+      axios.get();
     }
   }
 };
