@@ -8,7 +8,7 @@
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
       <div class="catvent-squares flex flex-wrap justify-around">
-        <CatventSquare v-for="i in 24" :key="i" class="m-5" :id="i"/>
+        <CatventSquare v-for="i in 25" :key="i" class="m-5" :id="i"/>
       </div>
     </div>
   </section>
