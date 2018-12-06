@@ -1,15 +1,20 @@
 <template>
   <div class="cat-face">
-    <div class="eyes">
-      <div class="eye-left">
-        <div class="eye eye-left-stick"></div>
-        <div class="eye eye-right-stick"></div>
+    <img v-if="!isActive" src="~/assets/zzz.png" alt="Zzz. The cat is asleep." class="zzz">
+    <div class="ears">
+      <div class="ear-left">
+        <div class="ear ear-left-stick"></div>
+        <div class="ear ear-right-stick"></div>
       </div>
-      <div class="eye-right">
-        <div class="eye eye-left-stick"></div>
-        <div class="eye eye-right-stick"></div>
+      <div class="ear-right">
+        <div class="ear ear-left-stick"></div>
+        <div class="ear ear-right-stick"></div>
       </div>
     </div>
+    <!-- <div v-if="isActive" class="eyes">
+      <div class="eye eye-left"></div>
+      <div class="eye eye-right"></div>
+    </div>-->
     <div class="nose"></div>
     <div class="whiskers">
       <div class="whisker whisker-left whisker-left-top"></div>
@@ -23,27 +28,58 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    isActive: Boolean
+  }
+};
 </script>
 
 <style>
 :root {
   --cat-color: #333;
+  --eye-size: 8px;
+  --eye-color: #ffbbca;
   --whisker-width: calc(var(--square-size) / 3);
   --whisker-height: 2px;
   --whisker-color: var(--cat-color);
   --whisker-top-pos: 110px;
   --nose-size: 10px;
   --nose-color: var(--cat-color);
-  --eye-width: 30px;
-  --eye-height: var(--whisker-height);
-  --eye-color: var(--cat-color);
+  --ear-width: 30px;
+  --ear-height: var(--whisker-height);
+  --ear-color: var(--cat-color);
 }
 
 .cat-face {
   position: relative;
   width: 100%;
   height: 100%;
+}
+.zzz {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  width: auto;
+  height: 30px;
+}
+.eyes {
+  width: 100%;
+  top: 85px;
+  position: absolute;
+}
+.eye {
+  position: absolute;
+  background-color: var(--eye-color);
+  height: var(--eye-size);
+  width: var(--eye-size);
+  border-radius: 100%;
+}
+.eye-left {
+  left: 70px;
+}
+.eye-right {
+  left: 120px;
 }
 .whiskers {
   position: absolute;
@@ -100,29 +136,29 @@ export default {};
   border-radius: 100%;
   background-color: var(--nose-color);
 }
-.eyes {
+.ears {
   position: absolute;
   width: 100%;
   top: 50px;
 }
-.eye-left {
+.ear-left {
   position: absolute;
   left: 40px;
 }
-.eye-right {
+.ear-right {
   position: absolute;
   left: 120px;
 }
-.eye {
+.ear {
   position: absolute;
-  background-color: var(--eye-color);
-  width: var(--eye-width);
-  height: var(--eye-height);
+  background-color: var(--ear-color);
+  width: var(--ear-width);
+  height: var(--ear-height);
 }
-.eye-left-stick {
+.ear-left-stick {
   transform: rotate(-65deg);
 }
-.eye-right-stick {
+.ear-right-stick {
   left: 12px;
   transform: rotate(65deg);
 }

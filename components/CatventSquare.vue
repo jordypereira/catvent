@@ -1,7 +1,7 @@
 <template>
   <div class="square" :class="{ 'square--active': squareActive }" @click="turnCard()">
     <div class="square__day">{{ id }}</div>
-    <CatFace v-if="squareActive && !catUrl"/>
+    <CatFace v-if="!catUrl" :isActive="squareActive"/>
     <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
         this.catUrl = await this.fetchCatImage();
         this.$cookies.set("catUrl-" + this.id, this.catUrl, {
           path: "/",
-          maxAge: 60 * 60 * 24 * (25 - this.today)
+          maxAge: 60 * 60 * 24 * (26 - this.today)
         });
       }
     },
