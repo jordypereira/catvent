@@ -2,6 +2,7 @@
   <div class="square" :class="{ 'square--active': squareActive }" @click="turnCard()">
     <div class="square__day">{{ id }}</div>
     <CatFace v-if="squareActive && !squareRevealed"/>
+    <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
   </div>
 </template>
 
@@ -17,7 +18,8 @@ export default {
   data() {
     return {
       squareRevealed: false,
-      apiKey: process.env.API_KEY
+      apiKey: process.env.API_KEY,
+      catUrl: ""
     };
   },
   components: {
@@ -25,19 +27,26 @@ export default {
   },
   computed: {
     squareActive() {
-      if (this.id < 7) return true;
+      if (this.id < 7 && !this.squareRevealed) return true;
       else return false;
     }
   },
   methods: {
-    turnCard() {
+    async turnCard() {
       if (this.squareActive) {
         this.squareRevealed = true;
+        this.catUrl = await this.fetchCatImage();
       }
     },
-    fetchCatImage() {
-      axios.get();
+    async fetchCatImage() {
+      axios.defaults.headers.common["x-api-key"] = this.apiKey;
+      let image = await axios.get("/v1/images/" + this.id);
+
+      return image.data.url;
     }
+  },
+  mounted() {
+    axios.defaults.baseURL = "https://api.thecatapi.com/";
   }
 };
 </script>
@@ -68,5 +77,10 @@ export default {
   height: var(--day-size);
   font-weight: 700;
   @apply flex justify-center items-center rounded-full bg-pink-lighter;
+}
+
+.catImage {
+  max-height: var(--square-size);
+  max-width: var(--square-size);
 }
 </style>
