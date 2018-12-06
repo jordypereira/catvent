@@ -6,7 +6,9 @@
   >
     <div class="square__day">{{ id }}</div>
     <CatFace v-if="!catUrl" :isActive="squareActive"/>
-    <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
+    <div class="catImage">
+      <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
+    </div>
   </div>
 </template>
 
@@ -101,7 +103,16 @@ export default {
 }
 
 .catImage {
-  max-height: var(--square-size);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.catImage > img {
   max-width: var(--square-size);
+  max-height: var(--square-size);
+  height: auto;
 }
 </style>
