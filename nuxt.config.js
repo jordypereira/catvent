@@ -8,7 +8,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    title: 'Catvent - An advent calendar with cats.',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -41,7 +41,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/dotenv',
+    ['@nuxtjs/dotenv', { systemvars: true }],
     'cookie-universal-nuxt',
     ['@nuxtjs/google-analytics', {
       id: 'UA-75839523-2'
