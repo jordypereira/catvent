@@ -1,6 +1,10 @@
 <template>
   <section class="container">
     <div>
+      <button
+        class="absolute pin-r m-5 px-5 py-2 bg-pink-lighter hover:bg-pink-lightest rounded-full"
+        @click="resetCats()"
+      >Reset</button>
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
       <div class="catvent-squares flex flex-wrap justify-around">
@@ -16,6 +20,12 @@ import CatventSquare from "../components/CatventSquare";
 export default {
   components: {
     CatventSquare
+  },
+  methods: {
+    resetCats() {
+      this.$cookies.removeAll();
+      location.reload(true);
+    }
   }
 };
 </script>
