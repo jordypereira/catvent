@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import CatFace from "../components/CatFace";
-import axios from "axios";
+import CatFace from '../components/CatFace';
+import axios from 'axios';
 
 export default {
-  name: "CatventSquare",
+  name: 'CatventSquare',
   props: {
     id: Number,
     today: Number,
@@ -42,7 +42,7 @@ export default {
       const min = (this.id - 1) * modifier
       const max = this.id * modifier
       return Math.floor(Math.random() * (max - min) + min)
-    }
+    },
   },
   methods: {
     async turnCard() {
@@ -77,7 +77,7 @@ export default {
     if (this.$cookies.get('catUrl-' + this.id)) {
       this.catUrl = this.$cookies.get('catUrl-' + this.id)
       this.squareLoaded = true
-    } else if(this.$cookies.get('active-catUrl-' + this.id)) {
+    } else if (this.$cookies.get('active-catUrl-' + this.id)) {
       this.catUrl = this.$cookies.get('active-catUrl-' + this.id)
     } else if (this.squareActive) {
       this.fetchCatImage()
