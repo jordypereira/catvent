@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section class="container min-h-screen flex justify-center items-center text-center mx-auto">
     <div>
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
@@ -8,42 +8,35 @@
         @click="resetCats()"
       >Reset</button>
       <div class="catvent-squares flex flex-wrap justify-around">
-        <CatventSquare v-for="i in 25" :key="i" class="m-5" :id="i"/>
+        <CatventSquare v-for="i in 25" :key="i" class="m-5" :id="i" :today="today"/>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import CatventSquare from "../components/CatventSquare";
+import CatventSquare from '../components/CatventSquare'
 
 export default {
+  name: 'Catvent-Page',
   components: {
-    CatventSquare
+    CatventSquare,
+  },
+  data() {
+    return {
+      today:  new Date().getDate(),
+    }
   },
   methods: {
     resetCats() {
-      this.$cookies.removeAll();
-      location.reload(true);
+      this.$cookies.removeAll()
+      location.reload(true)
     }
-  }
-};
+  },
+}
 </script>
 
 <style>
-.container {
-  @apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-
-/* .container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin: 0 auto;
-} */
-
 .title {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
