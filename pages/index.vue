@@ -4,7 +4,7 @@
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
       <button
-        class="md:absolute md:pin-r m-5 px-5 py-2 bg-pink-lighter hover:bg-pink-lightest rounded-full"
+        class="m-5 px-5 py-2 bg-pink-lighter hover:bg-pink-lightest rounded-full"
         @click="resetCats()"
       >Reset</button>
       <div class="catvent-squares flex flex-wrap justify-around">
