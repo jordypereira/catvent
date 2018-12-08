@@ -63,7 +63,25 @@ export default {
         this.catUrl = image.data.url
         return image.data.url
       } catch (error) {
-        return console.log('Fetching image failed. Please try Refreshing the page.')
+        try {
+          console.log('Fetching image failed. Trying another image...')
+          const imageId = this.randomCatUrl + 1
+          let image = await axios.get('/v1/images/' + imageId)
+          this.setCatCookie(image.data.url, 'active-')
+          this.catUrl = image.data.url
+          return image.data.url
+        } catch (error) {
+          try {
+            console.log('Fetching image failed. Trying another image...')
+            const imageId = this.randomCatUrl + 2
+            let image = await axios.get('/v1/images/' + imageId)
+            this.setCatCookie(image.data.url, 'active-')
+            this.catUrl = image.data.url
+            return image.data.url
+          } catch (error) {
+            return console.log('Fetching image failed. Please try Refreshing the page.')
+          }
+        }
       }
     },
     setCatCookie(catUrl, status = '') {
