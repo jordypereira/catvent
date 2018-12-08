@@ -6,8 +6,8 @@
   >
     <div class="square__day">{{ id }}</div>
     <CatFace v-if="!catUrl" :isActive="squareActive"/>
-    <div class="catImage">
-      <img v-if="catUrl" :src="catUrl" alt="Cat image" class="catImage">
+    <div v-if="catUrl" class="catImage">
+      <img :src="catUrl" alt="Cat image" class="catImage">
     </div>
   </div>
 </template>
