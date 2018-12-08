@@ -6,7 +6,7 @@
   >
     <div class="square__day flex justify-center items-center rounded-full bg-pink-lighter">{{ id }}</div>
     <CatFace v-if="!squareLoaded" :isActive="squareActive"/>
-    <div v-if="squareActive" v-show="squareLoaded" class="catImage">
+    <div v-if="squareActive" v-show="squareLoaded" class="square__image">
       <img :src="catUrl" alt="Cat image">
     </div>
   </div>
@@ -51,6 +51,7 @@ export default {
           await this.fetchCatImage()
         }
         this.setCatCookie(this.catUrl)
+        this.removeCatCookie('active-')
         this.squareLoaded = true
       }
     },
@@ -69,6 +70,11 @@ export default {
       this.$cookies.set(status + 'catUrl-' + this.id, catUrl, {
           path: '/',
           maxAge: 60 * 60 * 24 * (26 - this.today)
+        })
+    },
+    removeCatCookie(status = '') {
+      this.$cookies.remove(status + 'catUrl-' + this.id, {
+          path: '/'
         })
     },
   },
@@ -126,7 +132,7 @@ export default {
   font-weight: 700;
 }
 
-.catImage {
+.square__image {
   height: 100%;
   display: flex;
   align-items: center;
@@ -134,7 +140,7 @@ export default {
   justify-content: center;
 }
 
-.catImage > img {
+.square__image > img {
   max-width: var(--square-size);
   max-height: var(--square-size);
   height: auto;
