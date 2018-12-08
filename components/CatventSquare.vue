@@ -6,7 +6,7 @@
   >
     <div class="square__day flex justify-center items-center rounded-full bg-pink-lighter">{{ id }}</div>
     <CatFace v-if="!squareLoaded" :isActive="squareActive"/>
-    <div v-if="squareLoaded" class="catImage">
+    <div v-if="squareActive" v-show="squareLoaded" class="catImage">
       <img :src="catUrl" alt="Cat image">
     </div>
   </div>
@@ -48,7 +48,7 @@ export default {
     async turnCard() {
       if (this.squareActive) {
         if (!this.catUrl) {
-          this.catUrl = await this.fetchCatImage()
+          await this.fetchCatImage()
         }
         this.setCatCookie(this.catUrl)
         this.squareLoaded = true
@@ -59,6 +59,7 @@ export default {
       try {
         let image = await axios.get('/v1/images/' + this.randomCatUrl)
         this.setCatCookie(image.data.url, 'active-')
+        this.catUrl = image.data.url
         return image.data.url
       } catch (error) {
         return console.log('Fetching image failed. Please try Refreshing the page.')
