@@ -120,17 +120,17 @@ export default {
   height: var(--square-size);
   width: var(--square-size);
   position: relative;
-  @apply bg-indigo-dark;
+  @apply bg-indigo;
 }
 
 .square--active {
   transition: background 0.3s;
-  @apply bg-indigo-light;
+  @apply bg-indigo-lighter;
 }
 
 .square--active:hover {
   cursor: pointer;
-  @apply bg-indigo-lighter;
+  background: none;
 }
 
 .square--active:hover .ears {
