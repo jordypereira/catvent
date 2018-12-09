@@ -4,7 +4,18 @@
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
       <div class="catvent-squares flex flex-wrap justify-around">
-        <CatventSquare v-for="i in 25" :key="i" class="m-5" :id="i" :today="today"/>
+        <CatventSquare
+          class="m-5"
+          v-for="i in 25"
+          :key="i"
+          :id="i"
+          :url="catUrlArray[i] ? catUrlArray[i].url : ''"
+          :status="catUrlArray[i] ? catUrlArray[i].status : ''"
+          :unlockable="unlockable(i)"
+          :today="today"
+          @add-cat-url="addCatUrlToCatUrlString"
+          @remove-cat-url="removeCatUrlFromCatUrlString"
+        />
       </div>
     </div>
   </section>
@@ -21,7 +32,59 @@ export default {
   data() {
     return {
       today:  new Date().getDate(),
+      catUrlString: '',
+      imagesBlacklist: ['https://cdn2.thecatapi.com/images/45.gif'],
     }
+  },
+  computed: {
+    catUrlArray() {
+      const array =  this.catUrlString.split('_')
+      const stringArray = array.map(item => item.split('-'))
+      
+      let objectArray = Object.assign({}, 
+      ...stringArray.map(item => ({
+        [item[1]]: {
+          id: item[1],
+          status: item[0],
+          url: item[2],
+        }
+      }))
+      )
+      return objectArray
+    },
+  },
+  methods:{
+    addCatUrlToCatUrlString(id, catUrl, status) {
+      const string = status ? `${status}-${id}-${catUrl}` : `${id}-${catUrl}`
+      this.catUrlString += this.catUrlString !== '' ? `_${string}` : string
+    },
+    removeCatUrlFromCatUrlString(id, catUrl, status) {
+      const string = status ? `${status}-${id}-${catUrl}` : `${id}-${catUrl}`
+      const array = this.catUrlString.split('_')
+      const updatedArray = array.filter(catUrl => catUrl !== string)
+      const updatedString = updatedArray.join('_')
+      
+      this.catUrlString = updatedString
+    },
+    catUrlObject(string) {
+      const array = string.split('-')
+      return  {
+        status: array[0],
+        url: array[2],
+      }
+    },
+    unlockable(id){
+      return (id <= this.today) ? true : false
+    },
+  },
+  watch: {
+    catUrlString(string, oldString) {
+      console.log('Updated local storage')
+      localStorage.setItem('catUrl', string)
+    }
+  },
+  mounted() {
+    this.catUrlString = localStorage.getItem('catUrl') ? localStorage.getItem('catUrl') : ''
   },
 }
 </script>

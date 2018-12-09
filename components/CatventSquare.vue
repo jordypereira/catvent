@@ -1,13 +1,13 @@
 <template>
   <div
     class="square"
-    :class="{ 'square--active': squareActive, 'square--loaded': squareLoaded }"
+    :class="{ 'square--active': unlockable, 'square--loaded': loaded }"
     @click="turnCard()"
   >
     <div class="square__day flex justify-center items-center rounded-full bg-pink-lighter">{{ id }}</div>
-    <CatFace v-if="!squareLoaded" :isActive="squareActive"/>
-    <div v-if="squareActive" v-show="squareLoaded" class="square__image">
-      <img :src="catUrl" alt="Cat image">
+    <CatFace v-if="!loaded" :isActive="unlockable"/>
+    <div v-if="preloaded" v-show="loaded" class="square__image">
+      <img :src="url" alt="Cat image">
     </div>
   </div>
 </template>
@@ -21,6 +21,9 @@ export default {
   props: {
     id: Number,
     today: Number,
+    url: String,
+    status: String,
+    unlockable: Boolean,
   },
   data() {
     return {
@@ -43,15 +46,23 @@ export default {
       const max = this.id * modifier
       return Math.floor(Math.random() * (max - min) + min)
     },
+    preloaded() {
+      return (this.status == 'loaded' || this.status == 'preloaded') ? true : false
+    },
+    loaded() {
+      return (this.status == 'loaded') ? true : false
+    },
   },
   methods: {
     async turnCard() {
-      if (this.squareActive) {
-        if (!this.catUrl) {
-          await this.fetchCatImage()
-        }
-        this.setCatCookie(this.catUrl)
-        this.removeCatCookie('active-')
+      if (this.unlockable && !this.loaded) {
+        // if (!this.preloaded) {
+        //   await this.fetchCatImage()
+        // }
+        // this.setCatCookie(this.catUrl)
+        this.$emit('add-cat-url', this.id, this.url, 'loaded')
+        // this.removeCatCookie('active-')
+        this.$emit('remove-cat-url', this.id, this.url, 'preloaded')
         this.squareLoaded = true
       }
     },
@@ -59,25 +70,28 @@ export default {
       axios.defaults.headers.common['x-api-key'] = this.apiKey
       try {
         let image = await axios.get('/v1/images/' + this.randomCatUrl)
-        this.setCatCookie(image.data.url, 'active-')
-        this.catUrl = image.data.url
-        return image.data.url
+        // this.setCatCookie(image.data.url, 'active-')
+        this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
+        // this.catUrl = image.data.url
+        // return image.data.url
       } catch (error) {
         try {
           console.log('Fetching image failed. Trying another image...')
           const imageId = this.randomCatUrl + 1
           let image = await axios.get('/v1/images/' + imageId)
-          this.setCatCookie(image.data.url, 'active-')
-          this.catUrl = image.data.url
-          return image.data.url
+          // this.setCatCookie(image.data.url, 'active-')
+          this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
+          // this.catUrl = image.data.url
+          // return image.data.url
         } catch (error) {
           try {
             console.log('Fetching image failed. Trying another image...')
             const imageId = this.randomCatUrl + 2
             let image = await axios.get('/v1/images/' + imageId)
-            this.setCatCookie(image.data.url, 'active-')
-            this.catUrl = image.data.url
-            return image.data.url
+            // this.setCatCookie(image.data.url, 'active-')
+            this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
+            // this.catUrl = image.data.url
+            // return image.data.url
           } catch (error) {
             return console.log('Fetching image failed. Please try Refreshing the page.')
           }
@@ -98,12 +112,15 @@ export default {
   },
   mounted() {
     axios.defaults.baseURL = 'https://api.thecatapi.com/'
-    if (this.$cookies.get('catUrl-' + this.id)) {
-      this.catUrl = this.$cookies.get('catUrl-' + this.id)
-      this.squareLoaded = true
-    } else if (this.$cookies.get('active-catUrl-' + this.id)) {
-      this.catUrl = this.$cookies.get('active-catUrl-' + this.id)
-    } else if (this.squareActive) {
+    // if (this.$cookies.get('catUrl-' + this.id)) {
+    //   this.catUrl = this.$cookies.get('catUrl-' + this.id, 'loaded')
+    //   this.$emit('add-cat-url', this.id, this.catUrl, 'loaded')
+    //   this.squareLoaded = true
+    // } else if (this.$cookies.get('active-catUrl-' + this.id)) {
+    //   this.catUrl = this.$cookies.get('active-catUrl-' + this.id)
+    //   this.$emit('add-cat-url', this.id, this.catUrl, 'preloaded')
+    // } else 
+    if (!this.loaded && !this.preloaded && this.unlockable) {
       this.fetchCatImage()
     }
   },
