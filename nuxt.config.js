@@ -44,7 +44,7 @@ module.exports = {
     ['@nuxtjs/dotenv', { systemvars: true }],
     'cookie-universal-nuxt',
     ['@nuxtjs/google-analytics', {
-      id: 'UA-75839523-2'
+      id: process.env.GA_ID
     }]
   ],
 
