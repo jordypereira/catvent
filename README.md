@@ -1,6 +1,6 @@
 # catvent
 
-> An advent calendar with cats.
+> An advent calendar with cats.  
 Add dangerous or irrelevant cat pictures to [the blacklist](/static/blacklist.json)
 
 ## Build Setup
