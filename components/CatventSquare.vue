@@ -120,16 +120,33 @@ export default {
   height: var(--square-size);
   width: var(--square-size);
   position: relative;
-  @apply bg-indigo;
+  @apply bg-indigo-dark;
 }
 
 .square--active {
-  transition: background 0.1s;
+  transition: background 0.3s;
+  @apply bg-indigo-light;
 }
 
 .square--active:hover {
   cursor: pointer;
-  @apply bg-indigo-light;
+  @apply bg-indigo-lighter;
+}
+
+.square--active:hover .ears {
+  animation: animateEars 0.5s linear 0s 1;
+}
+
+@keyframes animateEars {
+  0% {
+    transform: rotateX(0deg);
+  }
+  70% {
+    transform: rotateX(-70deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
 }
 
 .square--loaded {
