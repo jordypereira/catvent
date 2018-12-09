@@ -1,17 +1,20 @@
 <template>
   <div>
     <nuxt/>
-    <footer class="w-full flex justify-center my-3">
-      <p>
-        Follow me on
-        <a
-          href="https://twitter.com/_perjor"
-          class="text-pink-light no-underline hover:text-indigo"
-        >Twitter</a>
-      </p>
-    </footer>
+    <TheFooter/>
   </div>
 </template>
+
+<script>
+import TheFooter from '../components/TheFooter'
+
+export default {
+  components: {
+    TheFooter,
+  }
+}
+</script>
+
 
 <style>
 html {
