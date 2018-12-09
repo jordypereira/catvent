@@ -22,6 +22,7 @@ export default {
   methods: {
     resetCats() {
       this.$cookies.removeAll()
+      localStorage.clear()
       location.reload(true)
     }
   },
