@@ -20,31 +20,26 @@ export default {
   name: 'CatventSquare',
   props: {
     id: Number,
-    today: Number,
     url: String,
     status: String,
     unlockable: Boolean,
+    blacklist: Array,
   },
   data() {
     return {
       apiKey: process.env.API_KEY,
-      catUrl: '',
-      squareLoaded: false,
+      tries: 0,
     };
   },
   components: {
     CatFace,
   },
   computed: {
-    squareActive() {
-      if (this.id <= this.today) return true
-      else return false
-    },
     randomCatUrl() {
       const modifier = 30
       const min = (this.id - 1) * modifier
       const max = this.id * modifier
-      return Math.floor(Math.random() * (max - min) + min)
+      return Math.floor(Math.random() * (max - min - 5) + min)
     },
     preloaded() {
       return (this.status == 'loaded' || this.status == 'preloaded') ? true : false
@@ -55,54 +50,33 @@ export default {
   },
   methods: {
     async turnCard() {
-      if (this.unlockable && !this.loaded) {
-        // if (!this.preloaded) {
-        //   await this.fetchCatImage()
-        // }
-        // this.setCatCookie(this.catUrl)
+      if (this.preloaded && !this.loaded) {
         this.$emit('add-cat-url', this.id, this.url, 'loaded')
-        // this.removeCatCookie('active-')
         this.$emit('remove-cat-url', this.id, this.url, 'preloaded')
-        this.squareLoaded = true
       }
     },
     async fetchCatImage() {
       axios.defaults.headers.common['x-api-key'] = this.apiKey
       try {
-        let image = await axios.get('/v1/images/' + this.randomCatUrl)
-        // this.setCatCookie(image.data.url, 'active-')
+        const imageId = this.randomCatUrl + this.tries
+        let image = await axios.get('/v1/images/' + imageId)
+        if (this.blacklist.includes(image.data.url)) {
+          console.log('Fetched image blacklisted. Trying another image...')
+          this.tries++
+          this.fetchCatImage()
+          return false
+        }
         this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
-        // this.catUrl = image.data.url
-        // return image.data.url
       } catch (error) {
-        try {
+        if (this.tries < 5) {
           console.log('Fetching image failed. Trying another image...')
-          const imageId = this.randomCatUrl + 1
-          let image = await axios.get('/v1/images/' + imageId)
-          // this.setCatCookie(image.data.url, 'active-')
-          this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
-          // this.catUrl = image.data.url
-          // return image.data.url
-        } catch (error) {
-          try {
-            console.log('Fetching image failed. Trying another image...')
-            const imageId = this.randomCatUrl + 2
-            let image = await axios.get('/v1/images/' + imageId)
-            // this.setCatCookie(image.data.url, 'active-')
-            this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
-            // this.catUrl = image.data.url
-            // return image.data.url
-          } catch (error) {
-            return console.log('Fetching image failed. Please try Refreshing the page.')
-          }
+          this.tries++
+          this.fetchCatImage()
+          return false
+        } else {
+          return console.log('Fetching image failed. Please try Refreshing the page.')
         }
       }
-    },
-    setCatCookie(catUrl, status = '') {
-      this.$cookies.set(status + 'catUrl-' + this.id, catUrl, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * (26 - this.today)
-        })
     },
     removeCatCookie(status = '') {
       this.$cookies.remove(status + 'catUrl-' + this.id, {
@@ -112,15 +86,15 @@ export default {
   },
   mounted() {
     axios.defaults.baseURL = 'https://api.thecatapi.com/'
-    // if (this.$cookies.get('catUrl-' + this.id)) {
-    //   this.catUrl = this.$cookies.get('catUrl-' + this.id, 'loaded')
-    //   this.$emit('add-cat-url', this.id, this.catUrl, 'loaded')
-    //   this.squareLoaded = true
-    // } else if (this.$cookies.get('active-catUrl-' + this.id)) {
-    //   this.catUrl = this.$cookies.get('active-catUrl-' + this.id)
-    //   this.$emit('add-cat-url', this.id, this.catUrl, 'preloaded')
-    // } else 
-    if (!this.loaded && !this.preloaded && this.unlockable) {
+    if (this.$cookies.get('catUrl-' + this.id)) {
+      url = this.$cookies.get('catUrl-' + this.id)
+      this.$emit('add-cat-url', this.id, url, 'loaded')
+      this.removeCatCookie()
+    } else if (this.$cookies.get('active-catUrl-' + this.id)) {
+      url = this.$cookies.get('active-catUrl-' + this.id)
+      this.$emit('add-cat-url', this.id, url, 'preloaded')
+      this.removeCatCookie('active-')
+    } else if (!this.loaded && !this.preloaded && this.unlockable) {
       this.fetchCatImage()
     }
   },

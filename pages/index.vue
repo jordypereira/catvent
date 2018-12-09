@@ -3,7 +3,7 @@
     <div>
       <h1 class="title">catvent</h1>
       <h2 class="subtitle">An advent calendar with cats.</h2>
-      <div class="catvent-squares flex flex-wrap justify-around">
+      <div v-if="fetchedFromLocalStorage" class="catvent-squares flex flex-wrap justify-around">
         <CatventSquare
           class="m-5"
           v-for="i in 25"
@@ -12,7 +12,7 @@
           :url="catUrlArray[i] ? catUrlArray[i].url : ''"
           :status="catUrlArray[i] ? catUrlArray[i].status : ''"
           :unlockable="unlockable(i)"
-          :today="today"
+          :blacklist="imagesBlacklist"
           @add-cat-url="addCatUrlToCatUrlString"
           @remove-cat-url="removeCatUrlFromCatUrlString"
         />
@@ -31,22 +31,25 @@ export default {
   },
   data() {
     return {
+      fetchedFromLocalStorage: false,
       today:  new Date().getDate(),
       catUrlString: '',
-      imagesBlacklist: ['https://cdn2.thecatapi.com/images/45.gif'],
+      imagesBlacklist: ['https://cdn2.thecatapi.com/images/45.gif', 'https://cdn2.thecatapi.com/images/26.gif', 'https://cdn2.thecatapi.com/images/72.gif', 'https://cdn2.thecatapi.com/images/42.gif', 'https://cdn2.thecatapi.com/images/79.gif',
+      'https://cdn2.thecatapi.com/images/210.gif',
+      'https://cdn2.thecatapi.com/images/98.gif'],
     }
   },
   computed: {
     catUrlArray() {
-      const array =  this.catUrlString.split('_')
-      const stringArray = array.map(item => item.split('-'))
+      const array =  this.catUrlString.split('_CATURL_')
+      const stringArray = array.map(item => item.split('-CATURL-'))
       
       let objectArray = Object.assign({}, 
       ...stringArray.map(item => ({
-        [item[1]]: {
-          id: item[1],
-          status: item[0],
-          url: item[2],
+        [item[0]]: {
+          id: item[0],
+          url: item[1],
+          status: item[2],
         }
       }))
       )
@@ -54,24 +57,20 @@ export default {
     },
   },
   methods:{
-    addCatUrlToCatUrlString(id, catUrl, status) {
-      const string = status ? `${status}-${id}-${catUrl}` : `${id}-${catUrl}`
-      this.catUrlString += this.catUrlString !== '' ? `_${string}` : string
+    createCatUrlString(id, url, status) {
+      return `${id}-CATURL-${url}-CATURL-${status}`
     },
-    removeCatUrlFromCatUrlString(id, catUrl, status) {
-      const string = status ? `${status}-${id}-${catUrl}` : `${id}-${catUrl}`
-      const array = this.catUrlString.split('_')
-      const updatedArray = array.filter(catUrl => catUrl !== string)
-      const updatedString = updatedArray.join('_')
+    addCatUrlToCatUrlString(id, url, status) {
+      const string = this.createCatUrlString(id, url, status)
+      this.catUrlString += this.catUrlString !== '' ? `_CATURL_${string}` : string
+    },
+    removeCatUrlFromCatUrlString(id, url, status) {
+      const string = this.createCatUrlString(id, url, status)
+      const array = this.catUrlString.split('_CATURL_')
+      const updatedArray = array.filter(item => item !== string)
+      const updatedString = updatedArray.join('_CATURL_')
       
       this.catUrlString = updatedString
-    },
-    catUrlObject(string) {
-      const array = string.split('-')
-      return  {
-        status: array[0],
-        url: array[2],
-      }
     },
     unlockable(id){
       return (id <= this.today) ? true : false
@@ -79,12 +78,12 @@ export default {
   },
   watch: {
     catUrlString(string, oldString) {
-      console.log('Updated local storage')
       localStorage.setItem('catUrl', string)
     }
   },
-  mounted() {
-    this.catUrlString = localStorage.getItem('catUrl') ? localStorage.getItem('catUrl') : ''
+  async mounted() {
+    this.catUrlString = await localStorage.getItem('catUrl') ? localStorage.getItem('catUrl') : ''
+    this.fetchedFromLocalStorage = true
   },
 }
 </script>
