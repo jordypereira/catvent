@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import CatFace from '../components/CatFace';
 import axios from 'axios';
+import CatFace from '../components/CatFace';
 
 export default {
   name: 'CatventSquare',
@@ -59,7 +59,7 @@ export default {
       axios.defaults.headers.common['x-api-key'] = this.apiKey
       try {
         const imageId = this.randomCatUrl + this.tries
-        let image = await axios.get('/v1/images/' + imageId)
+        let image = await axios.get('https://api.thecatapi.com/v1/images/' + imageId)
         if (this.blacklist.includes(image.data.url)) {
           console.log('Fetched image blacklisted. Trying another image...')
           this.tries++
@@ -85,7 +85,6 @@ export default {
     },
   },
   mounted() {
-    axios.defaults.baseURL = 'https://api.thecatapi.com/'
     if (this.$cookies.get('catUrl-' + this.id)) {
       const url = this.$cookies.get('catUrl-' + this.id)
       this.$emit('add-cat-url', this.id, url, 'loaded')

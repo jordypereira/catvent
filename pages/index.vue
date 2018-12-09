@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import CatventSquare from '../components/CatventSquare'
 
 export default {
@@ -31,15 +32,11 @@ export default {
   },
   data() {
     return {
+      apiKey: process.env.API_KEY,
       fetchedFromLocalStorage: false,
       today:  new Date().getDate(),
       catUrlString: '',
-      imagesBlacklist: [
-        'https://cdn2.thecatapi.com/images/45.gif', 'https://cdn2.thecatapi.com/images/26.gif', 'https://cdn2.thecatapi.com/images/72.gif', 'https://cdn2.thecatapi.com/images/42.gif', 'https://cdn2.thecatapi.com/images/79.gif',
-        'https://cdn2.thecatapi.com/images/210.gif',
-        'https://cdn2.thecatapi.com/images/98.gif',
-        'https://cdn2.thecatapi.com/images/17.gif'
-      ],
+      imagesBlacklist: [],
     }
   },
   computed: {
@@ -78,6 +75,14 @@ export default {
     unlockable(id){
       return (id <= this.today) ? true : false
     },
+    async fetchBlacklistedImages() {
+      try {
+        let blacklist = await axios.get('/blacklist.json')
+        return blacklist.data
+      } catch (error) {
+          console.log('Fetching blacklist failed. Try refreshing the page...')
+      }
+    }
   },
   watch: {
     catUrlString(string, oldString) {
@@ -85,6 +90,7 @@ export default {
     }
   },
   async mounted() {
+    this.imagesBlacklist = await this.fetchBlacklistedImages()
     this.catUrlString = await localStorage.getItem('catUrl') ? localStorage.getItem('catUrl') : ''
     this.fetchedFromLocalStorage = true
   },
