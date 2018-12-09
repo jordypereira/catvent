@@ -87,11 +87,11 @@ export default {
   mounted() {
     axios.defaults.baseURL = 'https://api.thecatapi.com/'
     if (this.$cookies.get('catUrl-' + this.id)) {
-      url = this.$cookies.get('catUrl-' + this.id)
+      const url = this.$cookies.get('catUrl-' + this.id)
       this.$emit('add-cat-url', this.id, url, 'loaded')
       this.removeCatCookie()
     } else if (this.$cookies.get('active-catUrl-' + this.id)) {
-      url = this.$cookies.get('active-catUrl-' + this.id)
+      const url = this.$cookies.get('active-catUrl-' + this.id)
       this.$emit('add-cat-url', this.id, url, 'preloaded')
       this.removeCatCookie('active-')
     } else if (!this.loaded && !this.preloaded && this.unlockable) {
