@@ -57,26 +57,26 @@ export default {
     },
     async fetchCatImage() {
       axios.defaults.headers.common['x-api-key'] = this.apiKey
-      try {
-        const imageId = this.randomCatUrl + this.tries
-        let image = await axios.get('https://api.thecatapi.com/v1/images/' + imageId)
-        if (this.blacklist.includes(image.data.url)) {
-          console.log('Fetched image blacklisted. Trying another image...')
-          this.tries++
-          this.fetchCatImage()
-          return false
-        }
-        this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
-      } catch (error) {
-        if (this.tries < 5) {
+      if (this.tries < 20) {
+        try {
+          const imageId = this.randomCatUrl + this.tries
+          let image = await axios.get('https://api.thecatapi.com/v1/images/' + imageId)
+          if (this.blacklist.includes(image.data.url)) {
+            console.log('Fetched image blacklisted. Trying another image...')
+            this.tries++
+            this.fetchCatImage()
+            return false
+          }
+          this.$emit('add-cat-url', this.id, image.data.url, 'preloaded')
+        } catch (error) {
           console.log('Fetching image failed. Trying another image...')
           this.tries++
           this.fetchCatImage()
           return false
-        } else {
+        }
+      } else {
           return console.log('Fetching image failed. Please try Refreshing the page.')
         }
-      }
     },
     removeCatCookie(status = '') {
       this.$cookies.remove(status + 'catUrl-' + this.id, {
