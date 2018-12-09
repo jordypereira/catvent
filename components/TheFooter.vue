@@ -1,17 +1,15 @@
 <template>
   <footer class="w-full flex justify-center my-3">
-    <p>
+    <p class="mx-2 flex justify-center flex-wrap">
       Follow me on
       <a
         href="https://twitter.com/_perjor"
-        class="text-pink-light no-underline hover:text-indigo"
+        class="text-pink-light no-underline hover:text-indigo px-1"
       >Twitter</a>
-    </p>
-    <p class="mx-2">-</p>
-    <p>
+      <span class="mx-2">-</span>
       Start over by
       <button
-        class="text-pink-light no-underline hover:text-indigo"
+        class="text-pink-light no-underline hover:text-indigo px-1"
         @click="resetCats()"
       >Resetting the calendar</button>
     </p>
