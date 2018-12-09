@@ -34,9 +34,12 @@ export default {
       fetchedFromLocalStorage: false,
       today:  new Date().getDate(),
       catUrlString: '',
-      imagesBlacklist: ['https://cdn2.thecatapi.com/images/45.gif', 'https://cdn2.thecatapi.com/images/26.gif', 'https://cdn2.thecatapi.com/images/72.gif', 'https://cdn2.thecatapi.com/images/42.gif', 'https://cdn2.thecatapi.com/images/79.gif',
-      'https://cdn2.thecatapi.com/images/210.gif',
-      'https://cdn2.thecatapi.com/images/98.gif'],
+      imagesBlacklist: [
+        'https://cdn2.thecatapi.com/images/45.gif', 'https://cdn2.thecatapi.com/images/26.gif', 'https://cdn2.thecatapi.com/images/72.gif', 'https://cdn2.thecatapi.com/images/42.gif', 'https://cdn2.thecatapi.com/images/79.gif',
+        'https://cdn2.thecatapi.com/images/210.gif',
+        'https://cdn2.thecatapi.com/images/98.gif',
+        'https://cdn2.thecatapi.com/images/17.gif'
+      ],
     }
   },
   computed: {
