@@ -5,7 +5,7 @@ Add dangerous or irrelevant cat pictures to [the blacklist](/static/blacklist.js
 
 ## Setup
 
-copy .env.example to .env and fill in an api key from [the cat api](https://thecatapi.com/)
+copy .env.example to .env and fill in an api key from [the cat api](https://thecatapi.com/)  
 fill in an google analytics key or remove the line in the nuxt.config.js
 
 ## Build Setup
