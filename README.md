@@ -23,21 +23,10 @@ Big shout out to [The Cat Api](https://thecatapi.com)
 copy .env.example to .env and fill in an api key from [the cat api](https://thecatapi.com/)  
 fill in an google analytics key or remove the line in the nuxt.config.js
 
-## Build Setup
+## Features
 
-``` bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn run dev
-
-# build for production and launch server
-$ yarn run build
-$ yarn start
-
-# generate static project
-$ yarn run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
++ Load in a different set of random kitties per day.
++ Preload all images.
++ Save clicked images in 1 string in Local Storage.
++ The Cat Face is drawn with CSS.
++ CSS hover animation.
